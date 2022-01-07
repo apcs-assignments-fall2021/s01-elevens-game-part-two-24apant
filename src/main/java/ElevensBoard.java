@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Objects;
 
 // The ElevensBoard class represents the board in a game of Elevens.
 // This class will contain all the code that implements the rules of the game
@@ -24,7 +25,13 @@ public class ElevensBoard extends Board {
     // returns true if **any** two of the given cards adds up to exactly 11
     // and false otherwise
     public boolean containsPairSum11(ArrayList<Integer> cardIndexes) {
-        // YOUR CODE HERE
+        for (int currentCard = 0; currentCard<cardIndexes.size();currentCard++){
+            for(int nextCard = 0; nextCard<cardIndexes.size();nextCard ++){
+                if (cardAt(cardIndexes.get(currentCard)).getPointValue() + cardAt(cardIndexes.get(nextCard)).getPointValue() == 11 && currentCard != nextCard){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -33,6 +40,21 @@ public class ElevensBoard extends Board {
     // amongst the selected cards, and false otherwise
     public boolean containsJQK(ArrayList<Integer> cardIndexes) {
         // YOUR CODE HERE
+        int numJacks = 0,numQueens = 0, numKings = 0;
+        for (int i = 0; i < cardIndexes.size();i++){
+            if(Objects.equals(cardAt(cardIndexes.get(i)).getRank(), "jack")){
+                numJacks ++;
+            }
+            else if(Objects.equals(cardAt(cardIndexes.get(i)).getRank(), "queen")){
+                numQueens ++;
+            }
+            else if(Objects.equals(cardAt(cardIndexes.get(i)).getRank(), "king")){
+                numKings ++;
+            }
+        }
+        if(numKings > 0 && numQueens > 0 && numJacks > 0){
+            return true;
+        }
         return false;
     }
 
@@ -44,7 +66,9 @@ public class ElevensBoard extends Board {
     public boolean anotherPlayIsPossible() {
         // allCards is a list of the indexes of all cards on the board
         ArrayList<Integer> allCards = getAllCardIndexes();
-
+        if(containsPairSum11(allCards) || containsJQK(allCards)){
+            return true;
+        }
         // YOUR CODE HERE
         // Just 1-2 lines of code needed
         return false;
@@ -56,6 +80,12 @@ public class ElevensBoard extends Board {
     @Override
     public boolean isLegal(ArrayList<Integer> selectedCards) {
         // YOUR CODE HERE
+        if(containsPairSum11(selectedCards) && selectedCards.size() == 2){
+            return true;
+        }
+        else if (containsJQK(selectedCards) && selectedCards.size() == 3){
+            return true;
+        }
         return false;
     }
 }
